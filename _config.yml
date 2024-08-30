@@ -110,7 +110,7 @@ toc: true
 
 comments:
   # Global switch for the post-comment system. Keeping it empty means disabled.
-  active: giscus  # [disqus | utterances | giscus]
+  active:  # [disqus | utterances | giscus]
   # The provider options are as follows:
   disqus:
     shortname: # fill with the Disqus shortname. › https://help.disqus.com/en/articles/1717111-what-s-a-shortname
@@ -120,12 +120,12 @@ comments:
     issue_term: # < url | pathname | title | ...>
   # Giscus options › https://giscus.app
   giscus:
-    repo: mdiph/mdiph.github.io
-    repo_id: R_kgDOMqITaA
-    category: "Announcements"
-    category_id: "DIC_kwDOMqITaM4CiD0u"
+    repo: 
+    repo_id: 
+    category: 
+    category_id: 
     # mapping: pathname
-    input_position: "bottom"
+    input_position: 
     # lang: "site.lang"
     # reactions_enabled: "1"
 
