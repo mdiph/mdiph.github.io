@@ -141,7 +141,7 @@ Raspberry Pi should start downloading and installing the Pi-Hole. After the down
 ### Pi-Hole Implementation
 With the installation of Pi-Hole finished, we can access the web interface by searching this address in the search engine:
 
-<http://youripaddress/admin>
+<https://youripaddress/admin>
 
 The interface will look like this, as of Pi-Hole version **5.11.3** and web interface version **5.13**
 
