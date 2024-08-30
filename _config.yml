@@ -126,8 +126,8 @@ comments:
     category_id: "DIC_kwDOMqITaM4CiD0u"
     # mapping: pathname
     input_position: "bottom"
-    lang: "site.lang"
-    reactions_enabled: "1"
+    # lang: "site.lang"
+    # reactions_enabled: "1"
 
 # Self-hosted static assets, optional › https://github.com/cotes2020/chirpy-static-assets
 assets:
