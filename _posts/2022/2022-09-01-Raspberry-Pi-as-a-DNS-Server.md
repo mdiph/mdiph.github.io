@@ -8,6 +8,22 @@ alt: "Running DNS Sinkhole using Raspberry Pi, With Pi-Hole"
 pin: true
 ---
 
+<script src="https://giscus.app/client.js"
+        data-repo="mdiph/mdiph.github.io"
+        data-repo-id="R_kgDOMqITaA"
+        data-category="Announcements"
+        data-category-id="DIC_kwDOMqITaM4CiD0t"
+        data-mapping="pathname"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="bottom"
+        data-theme="preferred_color_scheme"
+        data-lang="en"
+        crossorigin="anonymous"
+        async>
+</script>
+
 ## Using Raspberry Pi as DNS Server
 
 > This is `NOT` a guide, but this shows how I install and implement Pi-Hole on my network as a learning project, I'm pretty sure there's something that I miss or write incorrectly. 
