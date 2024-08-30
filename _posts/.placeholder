@@ -1,0 +1,8 @@
+---
+title: "TITLE TEXT"
+date: YYYY-MM-DD HH:MM:SS +/-TTT
+categories: [Primary Category, Subcategory]
+tags: [tag1, tag2, tag3]
+image: /path/to/image
+alt: "Image alt text"
+---
