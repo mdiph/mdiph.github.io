@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Overtime Eligibility Checker</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    /* --- UI STYLING --- */
+    body { font-family: Arial, sans-serif; background: #0f172a; color: #e5e7eb; padding: 24px; }
+    h1 { text-align: center; margin-bottom: 20px; }
+    .controls { text-align: center; margin-bottom: 20px; }
+    button { background: #22c55e; border: none; color: #052e16; padding: 10px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; margin-right: 10px; }
+    button.secondary { background: #38bdf8; color: #082f49; }
+    button.print-btn { background: #f59e0b; color: #451a03; }
+    input { padding: 8px; border-radius: 6px; border: 1px solid #1e293b; margin-right: 10px; width: 140px; }
+    .card { background: #020617; border: 1px solid #1e293b; border-radius: 10px; padding: 16px; margin-top: 20px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }
+    th, td { border: 1px solid #1e293b; padding: 8px; text-align: left; }
+    th { background: #020617; color: #93c5fd; }
+    tr:hover { background: #1e293b; cursor: pointer; }
+
+    /* --- PREVIEW STYLING (Excel Form Look) --- */
+    #markdownPreview { background: white; color: black; padding: 40px; border-radius: 4px; min-height: 400px; }
+    #markdownPreview h2 { text-align: center; text-decoration: underline; color: black !important; margin-bottom: 20px; font-weight: bold; font-size: 24px; }
+    #markdownPreview table { border: 2px solid black; width: 100%; border-collapse: collapse; }
+    #markdownPreview th { background: #d1d5db; color: black; border: 1px solid black; font-weight: bold; padding: 10px; text-align: center; }
+    #markdownPreview td { border: 1px solid black; color: black; padding: 10px; vertical-align: top; }
+    .signature-grid { display: grid; grid-template-columns: 1fr 1fr; margin-top: 80px; text-align: center; color: black; }
+
+    /* --- PRINT LOGIC --- */
+    @media print {
+      .no-print, .no-print *, h1, .controls, .card:first-of-type, h3 { display: none !important; }
+      body { background: white !important; padding: 0 !important; margin: 0 !important; }
+      .card { background: transparent !important; border: none !important; margin: 0 !important; padding: 0 !important; }
+      #markdownPreview { padding: 0 !important; width: 100% !important; }
+      @page { margin: 1.5cm; }
+    }
+  </style>
+</head>
+<body>
+
+<h1 class="no-print">⏱️ Overtime Eligibility Checker</h1>
+
+<div class="controls no-print">
+  <button onclick="searchRecords()">🔍 Search Records</button>
+  <input type="text" id="rowIdInput" placeholder="S_ROW_ID">
+  <button class="secondary" onclick="generateOvertime()">⚙️ Generate Overtime</button>
+  <button class="print-btn" onclick="window.print()">🖨️ Print Form</button>
+</div>
+
+<div class="card no-print">
+  <h3>📊 Records Preview</h3>
+  <div id="tableContainer">No data yet</div>
+</div>
+
+<div class="card">
+  <h3 class="no-print">📝 Overtime Preview</h3>
+  <div id="markdownPreview">No output yet</div>
+</div>
+
+<script>
+const GET_RECORDS_URL = "INSERT JETDATA GET RECORD API HERE";
+const SEARCH_RECORD_URL = "INSERT JETDATA SEARCH RECORD HERE";
+
+async function searchRecords() {
+  try {
+    const res = await fetch(GET_RECORDS_URL);
+    const data = await res.json();
+    let records = Array.isArray(data) ? data : (data.data ? (Array.isArray(data.data) ? data.data : Object.values(data.data)) : []);
+    renderTable(records);
+  } catch (e) { console.error("Fetch error", e); }
+}
+
+function renderTable(records) {
+  if (!records.length) { document.getElementById("tableContainer").innerHTML = "No records found"; return; }
+  const headers = Object.keys(records[0]);
+  let html = "<table><thead><tr>";
+  headers.forEach(h => html += `<th>${h}</th>`);
+  html += "</tr></thead><tbody>";
+  records.forEach(r => {
+    html += `<tr onclick="selectRow('${r.S_ROW_ID || r.ROW_ID || ""}')">`;
+    headers.forEach(h => html += `<td>${r[h] ?? ""}</td>`);
+    html += "</tr>";
+  });
+  html += "</tbody></table>";
+  document.getElementById("tableContainer").innerHTML = html;
+}
+
+function selectRow(id) { if (id) document.getElementById("rowIdInput").value = id; }
+
+async function generateOvertime() {
+  const rowId = document.getElementById("rowIdInput").value.trim();
+  if (!rowId) { alert("Please enter or select an ID"); return; }
+
+  // We search for S_ROW_ID specifically
+  const url = `${SEARCH_RECORD_URL}&search_field=S_ROW_ID&search_value=${encodeURIComponent(rowId)}`;
+  
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
+    
+    // Normalize data structure
+    let results = [];
+    if (data.data) {
+        results = Array.isArray(data.data) ? data.data : Object.values(data.data);
+    }
+
+    // Attempt to find the exact match, otherwise take the first result returned by the search
+    const record = results.find(r => String(r.S_ROW_ID) === String(rowId) || String(r.ROW_ID) === String(rowId)) || results[0];
+
+    if (!record) {
+      document.getElementById("markdownPreview").innerHTML = `<p style="color:red">Record ${rowId} not found in database.</p>`;
+      return;
+    }
+
+    const startDate = record.start_datetime ? record.start_datetime.split(' ')[0] : "";
+    const startTime = record.start_datetime ? record.start_datetime.split(' ')[1] : "";
+    const endTime = record.finish_datetime ? record.finish_datetime.split(' ')[1] : "";
+
+    const markdown = `
+## Form Overtime Company
+
+**Tahun/Bulan/Hari** : ${record.created_date || ""}  
+**Nama Karyawan** : ${record.engineer_name || ""}
+
+| No. | Nama Customer | Hari/Tanggal | Mulai | Selesai | Keterangan |
+|:---:|:---|:---|:---:|:---:|:---|
+| 1 | ${record.customer_name || ""} | ${startDate} | ${startTime} | ${endTime} | ${record.description_ar || ""} |
+
+<div class="signature-grid">
+    <div>
+        <p>Diajukan oleh,</p>
+        <br><br><br>
+        <p>____________________</p>
+    </div>
+    <div>
+        <p>Disetujui Oleh,</p>
+        <br><br><br>
+        <p>____________________</p>
+    </div>
+</div>
+`;
+    document.getElementById("markdownPreview").innerHTML = marked.parse(markdown);
+  } catch (err) {
+    console.error(err);
+    document.getElementById("markdownPreview").innerHTML = "Error fetching record.";
+  }
+}
+</script>
+</body>
+</html>
