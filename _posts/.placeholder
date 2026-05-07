@@ -6,4 +6,5 @@ tags: [tag1, tag2, tag3]
 image: /path/to/image
 alt: "Image alt text"
 description: "text"
+pin: false
 ---
