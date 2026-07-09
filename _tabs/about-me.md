@@ -1,6 +1,7 @@
 ---
 icon: fas fa-user
 order: 1
+comments: true
 ---
 
 ![Profile Picture](/assets/img/profile.jpg){: width="330" height="330" .w-50 .left}
