@@ -69,20 +69,7 @@ Below are the 3 solution that I made using JETData.AI and n8n for the final of t
 
 #### Demo Video
 
-<div class="video-wrapper">
-    <iframe
-    src="https://www.youtube-nocookie.com/embed/q2KYydekpiA"
-    title="Activity Report OCR"
-    width="100%"
-    height="450"
-    frameborder="0"
-    loading="lazy"
-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-    allowfullscreen
-    style="display: block; margin: 2rem auto;">
-    </iframe>
-</div>
-
+{% include embed/youtube.html id='q2KYydekpiA' %}
 
 The very first steps to creating any form is creating new App. App in JetData is like a directory, where the inside of App is the form. **So in short App, group Forms together**
 
@@ -268,19 +255,7 @@ _View All Record Activity Report_
 
 #### Demo Video
 
-<div class="video-wrapper">
-    <iframe
-    src="https://www.youtube-nocookie.com/embed/RGuQQEuM79o"
-    title="Overtime Form Creation"
-    width="100%"
-    height="450"
-    frameborder="0"
-    loading="lazy"
-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-    allowfullscreen
-    style="display: block; margin: 2rem auto;">
-    </iframe>
-</div>
+{% include embed/youtube.html id='RGuQQEuM79o' %}
 
 Again, with every new app, we create a form for it!, one for backend form, and one for frontend form. For backend form I'll be naming it ```Bucket - Overtime``` and frontend ```UI - Overtime```.
 
@@ -372,19 +347,7 @@ _Overtime UI Generated Form_
 
 #### Demo Video
 
-<div class="video-wrapper">
-    <iframe
-    src="https://www.youtube-nocookie.com/embed/6R0GVhgma1k"
-    title="Support Ticket Chatbot"
-    width="100%"
-    height="450"
-    frameborder="0"
-    loading="lazy"
-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-    allowfullscreen
-    style="display: block; margin: 2rem auto;">
-    </iframe>
-</div>
+{% include embed/youtube.html id='6R0GVhgma1k' %}
 
 First steps, of course, Forms!, we need to create the Form for the backend where it will hold the data, and the Form for Customized UI. For backend form I'll be naming it ```Bucket - Support``` and UI ```UI - Support```
 
