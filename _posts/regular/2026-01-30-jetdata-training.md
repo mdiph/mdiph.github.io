@@ -1,7 +1,7 @@
 ---
 title: "JETData.AI Training - Advance 1"
 date: 2026-02-4 02:54:00 +0700
-categories: [Training]
+categories: [Guide]
 tags: [AI, AI Agent, N8N, API]
 image: /assets/img/posts/jetdata-training/banner.png
 alt: "Final Assignment Write Up"

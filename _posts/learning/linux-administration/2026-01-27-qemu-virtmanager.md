@@ -6,6 +6,8 @@ tags: [Linux, Windows, QEMU, Virtualization]
 image: /assets/img/posts/qemu-virt-manager/banner.png
 alt: "Linux Host Virtualization Setup with QEMU and virt-manager"
 description: "Quick guide to setup QEMU and virt-manager to start playing with VM."
+learning: true
+course: "Linux Administration"
 pin: false
 ---
 

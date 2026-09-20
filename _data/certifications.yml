@@ -1,0 +1,126 @@
+# Certificates / badges shown on the About Me tab, in the order listed.
+# Each one is shown as a box and links to where it can be verified.
+#
+# Link (use one of these):
+#   url:        any verification page (Claude Academy, Coursera, Google, ...)
+#   credly_id:  a Credly badge id, the link to the public Credly page is built for you
+#
+# image:  optional badge picture URL (on the Credly page: right-click the badge >
+#         "Copy image address"). Without one, a generic award icon is shown.
+# title:  optional but recommended, shown under the box and on hover
+# post:   optional, link to your write-up (adds a small "Write-up" link)
+#
+- credly_id: 36a6af5d-f63d-4ac2-8549-ebd969ee3c8b
+  image: https://images.credly.com/images/8d32abec-8988-4a61-970c-d2365e4c1161/image.png
+  title: "NetApp Accredited Amazon FSx for NetApp ONTAP Associate"
+
+- credly_id: 41d5c03e-f0b8-451d-b3a0-6542d4bafee1
+  image: https://images.credly.com/size/680x680/images/092f3bbb-baf4-46cc-868c-d8ad5b2b7854/blob
+  title: "Nutanix Certified Professional - Artificial Intelligence 6"
+
+- credly_id: 35886aaf-ebf6-401e-9bef-699f973424d6
+  image: https://images.credly.com/size/680x680/images/35886aaf-ebf6-401e-9bef-699f973424d6/blob
+  title: "Nutanix Certified Professional - Cloud Native 6"
+
+- credly_id: 07c1ac2e-c05e-4254-8782-45e8ee205dc4
+  image: https://images.credly.com/size/160x160/images/d504af50-e3f2-4fc8-87bb-9d4452fb09f9/blob
+  title: "LFS118: Ethical Principles for Conversational AI"
+
+- credly_id: 5e3cd14c-3a6e-4f88-9a7e-bede47cb45ff
+  image: https://images.credly.com/size/160x160/images/15fa08e6-ca73-4fa3-94ed-c36f7f157313/blob
+  title: "AWS Cloud Quest: Generative AI Practitioner - Training Badge"
+
+- credly_id: 0730a13f-63a4-4836-95ce-11ba6348ba40
+  image: https://images.credly.com/size/160x160/images/30816e43-2550-4e1c-be22-3f03c5573bb9/blob
+  title: "AWS Cloud Quest: Cloud Practitioner - Training Badge"
+
+- credly_id: f316a933-b02b-43a6-b50a-10da1011125a
+  image: https://images.credly.com/size/160x160/images/eaddb3d4-7e01-4526-9363-1d9bc828722a/blob
+  title: "AWS Partner: Security Essentials - Training Badge"
+
+- credly_id: 8f006312-3154-45bf-a845-4a043641e83c
+  image: https://images.credly.com/images/8f006312-3154-45bf-a845-4a043641e83c/blob
+  title: "AWS Partner Technical Accredited - Training Badge"
+
+- credly_id: 3bcdf9be-7815-4464-82cb-763f33525e7c
+  image: https://images.credly.com/size/160x160/images/fc6fa322-80f4-45a5-9def-91e9bcfde837/blob
+  title: "AWS Educate Getting Started with Security - Training Badge"
+
+- credly_id: d855c1ca-f69e-41e6-8338-65650bd2d750
+  image: https://images.credly.com/size/160x160/images/4251ab91-6d67-47da-801c-855c0bbc6cc3/blob
+  title: "AWS Educate Getting Started with Cloud Ops - Training Badge"
+
+- credly_id: 34a6a079-3512-46a1-8b5b-5aa55258bf4e
+  image: https://images.credly.com/size/160x160/images/a08cf90b-9838-4f6c-82bd-8db85fb89dd5/blob
+  title: "AWS Educate Getting Started with Databases - Training Badge"
+
+- credly_id: 859b6eec-3f6e-46c8-aa5e-8968d9c35e4d
+  image: https://images.credly.com/size/160x160/images/f5095707-7683-4886-940c-3e8e4a2085ca/blob
+  title: "AWS Educate Getting Started with Networking - Training Badge"
+
+- credly_id: f5c0e1e8-6130-4475-bb87-8932f52641f1
+  image: https://images.credly.com/size/160x160/images/7b08cc0e-064b-407d-b70e-323509c3e474/blob
+  title: "AWS Educate Getting Started with Compute - Training Badge"
+
+- credly_id: b2a80534-4561-4aab-a356-097f9f40c173
+  image: https://images.credly.com/size/160x160/images/3b1b42e6-dfc2-492b-90df-8058096cb93d/blob
+  title: "AWS Educate Getting Started with Storage - Training Badge"
+
+- credly_id: 5f28d602-bce5-46ed-b5ea-bb80b15ab664
+  image: https://images.credly.com/size/160x160/images/e51a8579-188d-4363-8ed1-12ad164ef57b/blob
+  title: "AWS Educate Introduction to Cloud 101 - Training Badge"
+
+- credly_id: ed1a49a5-8a2b-4c22-bc41-353815a30a60
+  image: https://images.credly.com/images/3df3b287-9079-498a-8890-558bc0f5abab/image.png
+  title: "SolarWinds Licensing Accredited (SLA) 2026"
+
+- credly_id: 52b78c14-a785-4d67-a451-280e26b9edcf
+  image: https://images.credly.com/size/160x160/images/55e9cda7-93cc-400f-afd7-38ad645af482/blob
+  title: "SolarWinds Subscription Accreditation (SSA)"
+
+- credly_id: b227d95f-86b9-4f89-81c0-bb1eb161c0af
+  image: https://images.credly.com/size/160x160/images/3751c644-1640-4fef-b62a-0d75aa39914c/image.png
+  title: "SolarWinds Sales Expert Foundational Program - Observability V4"
+
+- credly_id: 23f8ce42-991f-4769-93d2-56232ec08a88
+  image: https://images.credly.com/size/160x160/images/43a84082-ce88-4b54-a64c-e86a7790a9e6/blob
+  title: "SolarWinds Solutions Certified Associate (SSCA) Observability SaaS"
+
+- credly_id: fcb828a1-cb4a-4b9f-8cc3-dcde51e5cdd9
+  image: https://images.credly.com/size/160x160/images/e566369b-cb7d-40fc-a427-1c66345fa23c/blob
+  title: "SolarWinds Solutions Certified Associate SSCA Observability Self-Hosted"
+
+- credly_id: 999d7437-8b66-4026-8372-089daa7cf54f
+  image: https://images.credly.com/size/160x160/images/0a6d331e-8abf-4272-a949-33f754569a76/CCNAENSA__1_.png
+  title: "CCNA: Enterprise Networking, Security, and Automation"
+
+- credly_id: 6a182781-2636-4af1-9d8c-30920cd7ed55
+  image: https://images.credly.com/size/160x160/images/f4ccdba9-dd65-4349-baad-8f05df116443/CCNASRWE__1_.png
+  title: "CCNA: Switching, Routing, and Wireless Essentials"
+
+- credly_id: bcded4a0-7bc9-4f63-a6ed-2cffce636184
+  image: https://images.credly.com/size/160x160/images/53f37f83-04a1-4935-9b1e-21a99cc6e1b2/CyberOpsAssoc.png
+  title: "CyberOps Associate"
+
+- credly_id: 90aea353-8f32-4cc4-a679-f3ae621a347f
+  image: https://images.credly.com/size/160x160/images/054913b2-e271-49a2-a1a4-9bf1c1f9a404/CyberEssentials.png
+  title: "Cybersecurity Essentials"
+
+- credly_id: 400a6135-9457-4cad-8149-cf2db2be3646
+  image: https://images.credly.com/size/160x160/images/04e8034c-81f5-4f7f-ab23-e8b428c31ce9/ITE.png
+  title: "IT Essentials"
+
+- credly_id: 39dfa088-833c-43d3-8ec2-d2cae4a78ef8
+  image: https://images.credly.com/size/160x160/images/af8c6b4e-fc31-47c4-8dcb-eb7a2065dc5b/I2CS__1_.png
+  title: "Introduction to Cybersecurity"
+
+- credly_id: 8478227c-f2c9-42a1-bd8b-d477fc44b93b
+  image: https://images.credly.com/size/160x160/images/fce226c2-0f13-4e17-b60c-24fa6ffd88cb/Intro2IoT.png
+  title: "Introduction to IoT"
+
+- credly_id: c2fd470a-7475-4ac1-b8af-08c2271a14d6
+  image: https://images.credly.com/size/160x160/images/70d71df5-f3dc-4380-9b9d-f22513a70417/CCNAITN__1_.png
+  title: "CCNA: Introduction to Networks"
+
+- url: https://academy.claude.com/verify/a9c23886488b4a963e675f674606e55f
+  title: Claude 101

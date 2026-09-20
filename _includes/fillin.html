@@ -1,0 +1,257 @@
+{%- comment -%}
+  A "type your answer" table, defined in the post's front matter and placed in the post body with:
+
+    {% include fillin.html name="packages" %}
+
+  Front matter:
+
+    practice:
+      packages:
+        title: "Practice: package commands"
+        intro: "Type the command for each task."     # optional
+        columns: ["Task", "Your command"]             # optional, these are the defaults
+        ignore_case: true                             # optional, default true
+        rows:
+          - task: "Refresh the package index"
+            answers: ["apt update", "sudo apt update"]   # every accepted answer, the first is shown when wrong
+            explanation: "Why this is the answer."
+
+  Answers are compared after trimming, collapsing repeated spaces and removing a leading "$ ".
+  Nothing is saved, refreshing the page resets everything.
+{%- endcomment -%}
+{%- assign practice = page.practice[include.name] -%}
+{%- if practice -%}
+{%- assign practice_total = practice.rows | size -%}
+{%- assign col_task = practice.columns[0] | default: 'Task' -%}
+{%- assign col_answer = practice.columns[1] | default: 'Your answer' -%}
+{%- if practice.ignore_case == false -%}{%- assign ignore_case = 'false' -%}{%- else -%}{%- assign ignore_case = 'true' -%}{%- endif -%}
+<div class="fillin" data-ignore-case="{{ ignore_case }}">
+<div class="fillin-title">{{ practice.title | default: 'Practice' }}</div>
+<div class="fillin-intro">{{ practice.intro | default: 'Type your answer in every row, then press Check answers.' | markdownify | remove: '<p>' | remove: '</p>' | strip }}</div>
+<table class="fillin-table">
+<thead><tr><th>{{ col_task }}</th><th>{{ col_answer }}</th><th>Result</th></tr></thead>
+<tbody>
+{%- for row in practice.rows -%}
+<tr class="fillin-row" data-answers="{{ row.answers | join: '|||' | escape }}">
+<td class="fillin-task">{{ row.task | markdownify | remove: '<p>' | remove: '</p>' | strip }}</td>
+<td class="fillin-cell"><input type="text" class="fillin-input" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="{{ row.task | strip_html | escape }}"></td>
+<td class="fillin-result"><div class="fillin-status"></div><div class="fillin-explanation" hidden>{{ row.explanation | markdownify | remove: '<p>' | remove: '</p>' | strip }}</div></td>
+</tr>
+{%- endfor -%}
+</tbody>
+</table>
+<div class="fillin-actions">
+<button type="button" class="fillin-check btn btn-primary" disabled>Check answers</button>
+<button type="button" class="fillin-retry btn btn-outline-secondary" hidden>Try again</button>
+<span class="fillin-progress">0 of {{ practice_total }} filled in</span>
+</div>
+<div class="fillin-summary" hidden>
+<div class="fillin-score"></div>
+<div class="fillin-breakdown">
+<span class="fillin-correct"></span>
+<span class="fillin-incorrect"></span>
+</div>
+</div>
+</div>
+<style>
+.fillin [hidden] { display: none !important; }
+.fillin {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: var(--card-bg);
+  box-shadow: var(--card-shadow);
+  border-radius: 10px;
+}
+.fillin .fillin-title {
+  color: var(--heading-color);
+  font-size: 1.35rem;
+  font-family: Lato, sans-serif;
+}
+.fillin .fillin-intro {
+  margin: 0.25rem 0 1rem;
+  color: var(--text-muted-color);
+  font-size: 0.9rem;
+}
+.fillin .table-wrapper > table td,
+.fillin .table-wrapper > table th {
+  white-space: normal;
+  vertical-align: top;
+}
+.fillin .fillin-table {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+.fillin .fillin-table td.fillin-cell {
+  width: 38%;
+  min-width: 14rem;
+}
+.fillin .fillin-table td.fillin-task {
+  width: 24%;
+}
+.fillin .fillin-input {
+  width: 100%;
+  padding: 0.4rem 0.6rem;
+  color: var(--text-color);
+  background: transparent;
+  border: 1px solid var(--main-border-color);
+  border-radius: 6px;
+  font-family: SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.9rem;
+}
+.fillin .fillin-input:focus {
+  outline: none;
+  border-color: var(--link-color);
+}
+.fillin .fillin-input:disabled {
+  opacity: 1;
+}
+.fillin .fillin-row.is-correct .fillin-input {
+  border-color: #2ea043;
+  background: rgba(46, 160, 67, 0.16);
+}
+.fillin .fillin-row.is-wrong .fillin-input {
+  border-color: #e5534b;
+  background: rgba(229, 83, 75, 0.16);
+}
+.fillin .fillin-status {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+.fillin .fillin-row.is-correct .fillin-status { color: #2ea043; }
+.fillin .fillin-row.is-wrong .fillin-status { color: #e5534b; }
+.fillin .fillin-explanation {
+  margin-top: 0.2rem;
+  color: var(--text-muted-color);
+  font-size: 0.85rem;
+}
+.fillin .fillin-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+.fillin .fillin-progress {
+  color: var(--text-muted-color);
+  font-size: 0.85rem;
+}
+.fillin .fillin-summary {
+  margin-top: 1.25rem;
+  padding: 1rem 1.25rem;
+  border-radius: 8px;
+  background: rgba(127, 127, 127, 0.1);
+  text-align: center;
+}
+.fillin .fillin-score {
+  color: var(--heading-color);
+  font-size: 1.75rem;
+  font-family: Lato, sans-serif;
+}
+.fillin .fillin-breakdown {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 0.25rem;
+}
+.fillin .fillin-correct { color: #2ea043; }
+.fillin .fillin-incorrect { color: #e5534b; }
+</style>
+<script>
+(function () {
+  if (window.__fillinInit) { return; }
+  window.__fillinInit = true;
+
+  function setup(box) {
+    var ignoreCase = box.getAttribute('data-ignore-case') !== 'false';
+    var rows = box.querySelectorAll('.fillin-row');
+    var total = rows.length;
+    var check = box.querySelector('.fillin-check');
+    var retry = box.querySelector('.fillin-retry');
+    var progress = box.querySelector('.fillin-progress');
+    var summary = box.querySelector('.fillin-summary');
+
+    function normalize(text) {
+      var t = text.replace(/\s+/g, ' ').trim().replace(/^\$\s*/, '');
+      return ignoreCase ? t.toLowerCase() : t;
+    }
+
+    function filledCount() {
+      var n = 0;
+      rows.forEach(function (row) {
+        if (row.querySelector('.fillin-input').value.trim() !== '') { n++; }
+      });
+      return n;
+    }
+
+    function update() {
+      var n = filledCount();
+      progress.textContent = n + ' of ' + total + ' filled in';
+      check.disabled = n < total;
+    }
+
+    box.addEventListener('input', function (e) {
+      if (e.target && e.target.classList.contains('fillin-input')) { update(); }
+    });
+
+    box.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' && e.target && e.target.classList.contains('fillin-input') && !check.disabled && !check.hidden) {
+        check.click();
+      }
+    });
+
+    check.addEventListener('click', function () {
+      if (filledCount() < total) { return; }
+      var correct = 0;
+
+      rows.forEach(function (row) {
+        var input = row.querySelector('.fillin-input');
+        var answers = row.getAttribute('data-answers').split('|||');
+        var given = normalize(input.value);
+        var ok = answers.some(function (a) { return normalize(a) === given; });
+        if (ok) { correct++; }
+
+        row.classList.add(ok ? 'is-correct' : 'is-wrong');
+        input.disabled = true;
+        row.querySelector('.fillin-status').textContent = ok
+          ? '✓ Correct'
+          : '✗ Incorrect. Answer: ' + answers[0];
+        var explanation = row.querySelector('.fillin-explanation');
+        explanation.hidden = explanation.textContent.trim() === '';
+      });
+
+      box.querySelector('.fillin-score').textContent = correct + ' / ' + total;
+      box.querySelector('.fillin-correct').textContent = '✓ ' + correct + ' correct';
+      box.querySelector('.fillin-incorrect').textContent = '✗ ' + (total - correct) + ' incorrect';
+      summary.hidden = false;
+      check.hidden = true;
+      retry.hidden = false;
+      progress.hidden = true;
+      summary.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+
+    retry.addEventListener('click', function () {
+      rows.forEach(function (row) {
+        var input = row.querySelector('.fillin-input');
+        input.value = '';
+        input.disabled = false;
+        row.classList.remove('is-correct', 'is-wrong');
+        row.querySelector('.fillin-status').textContent = '';
+        row.querySelector('.fillin-explanation').hidden = true;
+      });
+      summary.hidden = true;
+      check.hidden = false;
+      retry.hidden = true;
+      progress.hidden = false;
+      update();
+      box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      rows[0].querySelector('.fillin-input').focus();
+    });
+
+    update();
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.fillin').forEach(setup);
+  });
+})();
+</script>
+{%- endif -%}

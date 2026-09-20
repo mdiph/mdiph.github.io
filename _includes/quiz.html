@@ -1,0 +1,328 @@
+{%- comment -%}
+  A multiple choice quiz, defined in the post's front matter and placed in the post body with:
+
+    {% include quiz.html name="pretest" %}
+    {% include quiz.html name="posttest" compare="pretest" %}
+
+  Front matter:
+
+    quizzes:
+      pretest:
+        title: Pre-test
+        questions:
+          - q: "Question text (markdown such as `code` works)"
+            options:
+              - "First option"
+              - "Second option"
+            answer: 2            # the number of the correct option, starting at 1
+            explanation: "Why the answer is right (and why the tempting ones are not)."
+
+  `compare` is optional: the result also shows the score of that quiz (only if it was taken
+  on the same page load). Nothing is saved, refreshing the page resets everything.
+{%- endcomment -%}
+{%- assign quiz = page.quizzes[include.name] -%}
+{%- if quiz -%}
+{%- assign quiz_total = quiz.questions | size -%}
+{%- assign letters = 'A,B,C,D,E,F,G,H' | split: ',' -%}
+{%- assign compare_quiz = page.quizzes[include.compare] -%}
+<div class="quiz" data-quiz="{{ include.name }}" data-compare="{{ include.compare }}" data-compare-title="{{ compare_quiz.title }}">
+<div class="quiz-header">
+<div class="quiz-title">{{ quiz.title | default: 'Quiz' }}</div>
+<div class="quiz-intro">Answer all {{ quiz_total }} questions, then press <strong>Check answers</strong>.</div>
+</div>
+{%- for item in quiz.questions -%}
+{%- assign qn = forloop.index -%}
+<fieldset class="quiz-q" data-answer="{{ item.answer }}">
+<legend><span class="quiz-num">{{ qn }}.</span> {{ item.q | markdownify | remove: '<p>' | remove: '</p>' | strip }}</legend>
+{%- for option in item.options -%}
+<label class="quiz-option"><input type="radio" name="quiz-{{ include.name }}-{{ qn }}" value="{{ forloop.index }}"><span class="quiz-letter">{{ letters[forloop.index0] }}</span><span class="quiz-option-text">{{ option | markdownify | remove: '<p>' | remove: '</p>' | strip }}</span></label>
+{%- endfor -%}
+<div class="quiz-feedback" hidden>
+<div class="quiz-status"></div>
+<div class="quiz-explanation">{{ item.explanation | markdownify | remove: '<p>' | remove: '</p>' | strip }}</div>
+</div>
+</fieldset>
+{%- endfor -%}
+<div class="quiz-actions">
+<button type="button" class="quiz-check btn btn-primary" disabled>Check answers</button>
+<button type="button" class="quiz-retry btn btn-outline-secondary" hidden>Try again</button>
+<span class="quiz-progress">0 of {{ quiz_total }} answered</span>
+</div>
+<div class="quiz-result" hidden>
+<div class="quiz-score"></div>
+<div class="quiz-breakdown">
+<span class="quiz-correct"></span>
+<span class="quiz-incorrect"></span>
+</div>
+<div class="quiz-compare" hidden></div>
+</div>
+</div>
+<style>
+.quiz [hidden] { display: none !important; }
+.quiz {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: var(--card-bg);
+  box-shadow: var(--card-shadow);
+  border-radius: 10px;
+}
+.quiz .quiz-title {
+  color: var(--heading-color);
+  font-size: 1.35rem;
+  font-family: Lato, sans-serif;
+}
+.quiz .quiz-intro {
+  margin: 0.25rem 0 1.25rem;
+  color: var(--text-muted-color);
+  font-size: 0.9rem;
+}
+.quiz fieldset {
+  margin: 0 0 1.25rem;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+.quiz legend {
+  float: none;
+  width: 100%;
+  margin-bottom: 0.6rem;
+  padding: 0;
+  color: var(--heading-color);
+  font-size: 1.05rem;
+  line-height: 1.5;
+}
+.quiz .quiz-num {
+  color: var(--text-muted-color);
+  margin-right: 0.15rem;
+}
+.quiz .quiz-option {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin: 0 0 0.45rem;
+  padding: 0.55rem 0.85rem;
+  border: 1px solid var(--main-border-color);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out, border-color 0.2s ease-in-out;
+}
+.quiz .quiz-option:hover {
+  border-color: var(--link-color);
+}
+.quiz .quiz-option:has(input:checked) {
+  border-color: var(--link-color);
+  background: rgba(127, 127, 127, 0.12);
+}
+.quiz .quiz-option input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.quiz .quiz-letter {
+  flex: 0 0 auto;
+  width: 1.5rem;
+  height: 1.5rem;
+  line-height: 1.5rem;
+  text-align: center;
+  border-radius: 50%;
+  border: 1px solid var(--main-border-color);
+  color: var(--text-muted-color);
+  font-size: 0.8rem;
+}
+.quiz .quiz-option:has(input:checked) .quiz-letter {
+  background: var(--link-color);
+  border-color: var(--link-color);
+  color: var(--card-bg);
+}
+.quiz .quiz-option-text {
+  flex: 1 1 auto;
+}
+.quiz fieldset:has(input:disabled) .quiz-option {
+  cursor: default;
+}
+/* result colours must beat the "selected" look */
+.quiz .quiz-q .quiz-option.is-answer {
+  border-color: #2ea043;
+  background: rgba(46, 160, 67, 0.16);
+}
+.quiz .quiz-q .quiz-option.is-answer .quiz-letter {
+  background: #2ea043;
+  border-color: #2ea043;
+  color: #fff;
+}
+.quiz .quiz-q .quiz-option.is-chosen-wrong {
+  border-color: #e5534b;
+  background: rgba(229, 83, 75, 0.16);
+}
+.quiz .quiz-q .quiz-option.is-chosen-wrong .quiz-letter {
+  background: #e5534b;
+  border-color: #e5534b;
+  color: #fff;
+}
+.quiz .quiz-feedback {
+  margin-top: 0.6rem;
+  padding: 0.6rem 0.85rem;
+  border-left: 3px solid var(--main-border-color);
+  border-radius: 0 6px 6px 0;
+  background: rgba(127, 127, 127, 0.08);
+  font-size: 0.92rem;
+}
+.quiz .quiz-q.is-correct .quiz-feedback { border-left-color: #2ea043; }
+.quiz .quiz-q.is-wrong .quiz-feedback { border-left-color: #e5534b; }
+.quiz .quiz-status {
+  font-weight: 600;
+  margin-bottom: 0.2rem;
+}
+.quiz .quiz-q.is-correct .quiz-status { color: #2ea043; }
+.quiz .quiz-q.is-wrong .quiz-status { color: #e5534b; }
+.quiz .quiz-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+.quiz .quiz-progress {
+  color: var(--text-muted-color);
+  font-size: 0.85rem;
+}
+.quiz .quiz-result {
+  margin-top: 1.25rem;
+  padding: 1rem 1.25rem;
+  border-radius: 8px;
+  background: rgba(127, 127, 127, 0.1);
+  text-align: center;
+}
+.quiz .quiz-score {
+  color: var(--heading-color);
+  font-size: 1.75rem;
+  font-family: Lato, sans-serif;
+}
+.quiz .quiz-breakdown {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 0.25rem;
+}
+.quiz .quiz-correct { color: #2ea043; }
+.quiz .quiz-incorrect { color: #e5534b; }
+.quiz .quiz-compare {
+  margin-top: 0.5rem;
+  color: var(--text-muted-color);
+  font-size: 0.9rem;
+}
+</style>
+<script>
+(function () {
+  if (window.__quizInit) { return; }
+  window.__quizInit = true;
+
+  var LETTERS = 'ABCDEFGH';
+  var scores = {};
+
+  function setup(quiz) {
+    var name = quiz.getAttribute('data-quiz');
+    var compare = quiz.getAttribute('data-compare');
+    var compareTitle = quiz.getAttribute('data-compare-title') || compare;
+    var questions = quiz.querySelectorAll('.quiz-q');
+    var total = questions.length;
+    var check = quiz.querySelector('.quiz-check');
+    var retry = quiz.querySelector('.quiz-retry');
+    var progress = quiz.querySelector('.quiz-progress');
+    var result = quiz.querySelector('.quiz-result');
+
+    function answeredCount() {
+      var n = 0;
+      questions.forEach(function (q) {
+        if (q.querySelector('input:checked')) { n++; }
+      });
+      return n;
+    }
+
+    function update() {
+      var n = answeredCount();
+      progress.textContent = n + ' of ' + total + ' answered';
+      check.disabled = n < total;
+    }
+
+    quiz.addEventListener('change', function (e) {
+      if (e.target && e.target.type === 'radio') { update(); }
+    });
+
+    check.addEventListener('click', function () {
+      if (answeredCount() < total) { return; }
+      var correct = 0;
+
+      questions.forEach(function (q) {
+        var answer = q.getAttribute('data-answer');
+        var chosen = q.querySelector('input:checked');
+        var ok = chosen.value === answer;
+        if (ok) { correct++; }
+
+        q.classList.add(ok ? 'is-correct' : 'is-wrong');
+        q.querySelectorAll('input').forEach(function (i) { i.disabled = true; });
+        q.querySelectorAll('.quiz-option').forEach(function (opt) {
+          var value = opt.querySelector('input').value;
+          if (value === answer) {
+            opt.classList.add('is-answer');
+          } else if (value === chosen.value) {
+            opt.classList.add('is-chosen-wrong');
+          }
+        });
+
+        q.querySelector('.quiz-status').textContent = ok
+          ? '✓ Correct'
+          : '✗ Incorrect. The correct answer is ' + LETTERS.charAt(parseInt(answer, 10) - 1) + '.';
+        q.querySelector('.quiz-feedback').hidden = false;
+      });
+
+      var wrong = total - correct;
+      scores[name] = correct;
+      result.querySelector('.quiz-score').textContent = correct + ' / ' + total;
+      result.querySelector('.quiz-correct').textContent = '✓ ' + correct + ' correct';
+      result.querySelector('.quiz-incorrect').textContent = '✗ ' + wrong + ' incorrect';
+
+      var compareBox = result.querySelector('.quiz-compare');
+      if (compare && scores[compare] !== undefined) {
+        compareBox.textContent = compareTitle + ': ' + scores[compare] + ' / ' + total;
+        compareBox.hidden = false;
+      } else {
+        compareBox.hidden = true;
+      }
+
+      result.hidden = false;
+      check.hidden = true;
+      retry.hidden = false;
+      progress.hidden = true;
+      result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+
+    retry.addEventListener('click', function () {
+      questions.forEach(function (q) {
+        q.classList.remove('is-correct', 'is-wrong');
+        q.querySelectorAll('input').forEach(function (i) {
+          i.checked = false;
+          i.disabled = false;
+        });
+        q.querySelectorAll('.quiz-option').forEach(function (opt) {
+          opt.classList.remove('is-answer', 'is-chosen-wrong');
+        });
+        q.querySelector('.quiz-feedback').hidden = true;
+      });
+      delete scores[name];
+      result.hidden = true;
+      check.hidden = false;
+      retry.hidden = true;
+      progress.hidden = false;
+      update();
+      quiz.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    update();
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.quiz').forEach(setup);
+  });
+})();
+</script>
+{%- endif -%}

@@ -1,0 +1,15 @@
+# Course cards shown on the Learning tab.
+# The key must match the `course:` value used in the posts exactly.
+# All fields are optional:
+#   description, image
+#   order: number, lowest first. Courses without one come after, alphabetically.
+
+Linux Fundamental:
+  order: 1
+  description: What is Linux? Learn the basics and how to move around the terminal.
+  image: /assets/img/courses/linux-fundamental.jpeg
+
+Linux Administration:
+  order: 2
+  description: Set up Linux, deploy virtual machines, and run your own system.
+  image: /assets/img/courses/linux-administration.jpeg

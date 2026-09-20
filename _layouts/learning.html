@@ -1,0 +1,235 @@
+---
+layout: default
+---
+
+{% include lang.html %}
+
+{% assign course_groups = site.posts | where: 'learning', true | group_by: 'course' %}
+
+<!--
+  Order the courses: by `order` in _data/courses.yml (lowest first),
+  then the ones without an `order` alphabetically, and posts without a course last.
+-->
+{% assign sort_keys = '' | split: '' %}
+{% for group in course_groups %}
+  {% assign group_info = site.data.courses[group.name] %}
+  {% assign group_order = group_info.order | default: 9999 | plus: 100000 %}
+  {% assign group_label = group.name | default: '~Other' %}
+  {% capture sort_key %}{{ group_order }}|{{ group_label }}|{{ forloop.index0 }}{% endcapture %}
+  {% assign sort_keys = sort_keys | push: sort_key %}
+{% endfor %}
+{% assign sort_keys = sort_keys | sort %}
+
+{% assign courses = '' | split: '' %}
+{% for sort_key in sort_keys %}
+  {% assign group_index = sort_key | split: '|' | last | plus: 0 %}
+  {% assign courses = courses | push: course_groups[group_index] %}
+{% endfor %}
+
+<style>
+  #post-list details.course {
+    margin-bottom: 1.25rem;
+  }
+  #post-list details.course > summary.card-wrapper {
+    margin-bottom: 0;
+  }
+  #post-list details.course > summary {
+    list-style: none;
+    cursor: pointer;
+  }
+  #post-list details.course > summary::-webkit-details-marker {
+    display: none;
+  }
+  #post-list details.course .course-chevron {
+    transition: transform 0.25s ease-in-out;
+  }
+  #post-list details.course[open] .course-chevron {
+    transform: rotate(180deg);
+  }
+  #post-list details.course .course-posts {
+    margin-top: 1.25rem;
+  }
+  /* compact post cards: small thumbnail, one-line summary */
+  #post-list details.course .course-posts .card-text {
+    margin-bottom: 0.5rem !important;
+  }
+  #post-list details.course .course-posts .card-text p {
+    -webkit-line-clamp: 1 !important;
+  }
+  #post-list details.course .course-posts .card-body {
+    padding: 0.9rem 1.25rem;
+  }
+  #post-list details.course .course-posts .card-title {
+    font-size: 1.05rem;
+    margin-bottom: 0.5rem !important;
+  }
+  @media (min-width: 768px) {
+    #post-list details.course .course-posts .post-preview:has(> .col-md-3) {
+      height: 9rem;
+    }
+    #post-list details.course .course-posts .post-preview > .col-md-3 {
+      height: 100%;
+    }
+    #post-list details.course .course-posts .post-preview > .col-md-3 .preview-img {
+      aspect-ratio: auto;
+    }
+  }
+  /* full-width post cards, marked as belonging to the course by a left accent */
+  #post-list details.course .course-posts .card-wrapper {
+    border-left: 3px solid var(--link-color);
+  }
+  /* same height for every card that has an image, whatever the text length */
+  @media (min-width: 768px) {
+    #post-list .post-preview:has(> .col-md-5) {
+      height: 12.5rem;
+    }
+    #post-list .post-preview > .col-md-5 {
+      height: 100%;
+    }
+    #post-list .post-preview > .col-md-5 .preview-img {
+      aspect-ratio: auto;
+    }
+  }
+</style>
+
+<div id="post-list" class="flex-grow-1 px-xl-1">
+  {% for course in courses %}
+    {% assign course_name = course.name | default: 'Other' %}
+    {% assign course_info = site.data.courses[course_name] %}
+
+    <!-- modules first (by number), then posts without a module (oldest first) -->
+    {% assign numbered = course.items | where_exp: 'item', 'item.module' | sort: 'module' %}
+    {% assign unnumbered = course.items | where_exp: 'item', 'item.module == nil' | reverse %}
+    {% assign course_posts = numbered | concat: unnumbered %}
+
+    <!-- estimated completion time: `duration` (minutes) of a post, else its read time -->
+    {% assign total_minutes = 0 %}
+    {% for post in course_posts %}
+      {% if post.duration %}
+        {% assign post_minutes = post.duration | plus: 0 %}
+      {% else %}
+        {% assign post_minutes = post.content | strip_html | number_of_words: 'auto' | divided_by: 180 %}
+        {% if post_minutes < 1 %}{% assign post_minutes = 1 %}{% endif %}
+      {% endif %}
+      {% assign total_minutes = total_minutes | plus: post_minutes %}
+    {% endfor %}
+
+    {% if total_minutes >= 60 %}
+      {% assign hours = total_minutes | divided_by: 60 %}
+      {% assign rest = total_minutes | modulo: 60 %}
+      {% capture total_label %}{{ hours }} h{% if rest > 0 %} {{ rest }} min{% endif %}{% endcapture %}
+    {% else %}
+      {% capture total_label %}{{ total_minutes }} min{% endcapture %}
+    {% endif %}
+
+    <details class="course">
+      <summary class="card-wrapper card">
+        <div class="post-preview row g-0 flex-md-row-reverse">
+          {% assign summary_col = '12' %}
+          {% if course_info.image %}
+            <div class="col-md-5">
+              <div class="preview-img" role="img" aria-label="{{ course_name }}" style="background: url('{{ course_info.image | relative_url }}') center / cover no-repeat;"></div>
+            </div>
+            {% assign summary_col = '7' %}
+          {% endif %}
+
+          <div class="col-md-{{ summary_col }}">
+            <div class="card-body d-flex flex-column">
+              <h1 class="card-title my-2 mt-md-0">{{ course_name }}</h1>
+
+              {% if course_info.description %}
+                <div class="card-text content mt-0 mb-3">
+                  <p>{{ course_info.description }}</p>
+                </div>
+              {% endif %}
+
+              <div class="post-meta flex-grow-1 d-flex align-items-end">
+                <div class="me-auto">
+                  <i class="far fa-file-lines fa-fw me-1"></i>
+                  {{ course_posts.size }}
+                  {% if course_posts.size == 1 %}post{% else %}posts{% endif %}
+
+                  <i class="far fa-clock fa-fw me-1"></i>
+                  {{ total_label }}
+                </div>
+                <i class="fas fa-chevron-down course-chevron ms-1"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </summary>
+
+      <div class="course-posts">
+        {% for post in course_posts %}
+          <article class="card-wrapper card">
+            <a href="{{ post.url | relative_url }}" class="post-preview row g-0 flex-md-row-reverse">
+              {% assign card_body_col = '12' %}
+
+              {% if post.image %}
+                {% assign src = post.image.path | default: post.image %}
+
+                {% if post.media_subpath %}
+                  {% unless src contains '://' %}
+                    {% assign src = post.media_subpath
+                      | append: '/'
+                      | append: src
+                      | replace: '///', '/'
+                      | replace: '//', '/'
+                    %}
+                  {% endunless %}
+                {% endif %}
+
+                {% assign alt = post.image.alt | xml_escape | default: 'Preview Image' %}
+
+                <div class="col-md-3">
+                  <div class="preview-img" role="img" aria-label="{{ alt }}" style="background: url('{{ src }}') center / cover no-repeat;"></div>
+                </div>
+
+                {% assign card_body_col = '9' %}
+              {% endif %}
+
+              <div class="col-md-{{ card_body_col }}">
+                <div class="card-body d-flex flex-column">
+                  <h1 class="card-title my-2 mt-md-0">
+                    {%- if post.module -%}<span class="text-muted">Module {{ post.module }} ·</span> {% endif -%}
+                    {{ post.title }}
+                  </h1>
+
+                  <div class="card-text content mt-0 mb-3">
+                    <p>{% include post-summary.html %}</p>
+                  </div>
+
+                  <div class="post-meta flex-grow-1 d-flex align-items-end">
+                    <div class="me-auto">
+                      <i class="far fa-calendar fa-fw me-1"></i>
+                      {% include datetime.html date=post.date lang=lang %}
+
+                      {% if post.duration %}
+                        {% assign card_minutes = post.duration %}
+                      {% else %}
+                        {% assign card_minutes = post.content | strip_html | number_of_words: 'auto' | divided_by: 180 %}
+                        {% if card_minutes < 1 %}{% assign card_minutes = 1 %}{% endif %}
+                      {% endif %}
+                      <i class="far fa-clock fa-fw me-1"></i>
+                      {{ card_minutes }} min
+
+                      {% if post.categories.size > 0 %}
+                        <i class="far fa-folder-open fa-fw me-1"></i>
+                        <span class="categories">
+                          {% for category in post.categories %}
+                            {{ category }}
+                            {%- unless forloop.last -%},{%- endunless -%}
+                          {% endfor %}
+                        </span>
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </article>
+        {% endfor %}
+      </div>
+    </details>
+  {% endfor %}
+</div>
