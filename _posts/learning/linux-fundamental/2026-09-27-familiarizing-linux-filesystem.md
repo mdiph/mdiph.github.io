@@ -135,7 +135,7 @@ This layout follows the [**Filesystem Hierarchy Standard (FHS)**](https://www.li
 
 ---
 
-## Directories**
+## **Directories**
 
 | Path | What is this? |
 |---|---|
