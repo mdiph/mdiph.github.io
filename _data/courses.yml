@@ -4,12 +4,17 @@
 #   description, image
 #   order: number, lowest first. Courses without one come after, alphabetically.
 
-Linux Fundamental:
+BytePlus:
   order: 1
+  description: Anything about BytePlus platform and the services they provide.
+  image: /assets/img/courses/byteplus.jpeg
+
+Linux Fundamental:
+  order: 2
   description: What is Linux? Learn the basics and how to move around the terminal.
   image: /assets/img/courses/linux-fundamental.jpeg
 
 Linux Administration:
-  order: 2
+  order: 3
   description: Set up Linux, deploy virtual machines, and run your own system.
   image: /assets/img/courses/linux-administration.jpeg
